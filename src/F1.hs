@@ -22,20 +22,22 @@ rovarsprakchar:: Char -> String
 rovarsprakchar c = if c `elem` vowels then [c] else [c, 'o', c]
 
 rovarsprak:: String -> String
-rovarsprak s = rovarsprakloop s []
+rovarsprak s = reverse(rovarsprakloop s [])
 
 rovarsprakloop:: String -> String -> String
 rovarsprakloop org new = if org == [] then new
-    else rovarsprakloop (tail org) (new ++ rovarsprakchar (head org))
+    else if (head org) `elem` vowels then
+        rovarsprakloop (tail org) ((head org):new)
+        else rovarsprakloop (tail org) ((head org):'o':(head org):new)
 
 karpsravor:: String -> String
-karpsravor s = karpsravorloop s []
+karpsravor s = reverse(karpsravorloop s [])
 
 karpsravorloop:: String -> String -> String
 karpsravorloop org new = if org == [] then new
     else if (head org) `elem` vowels then 
-        karpsravorloop (tail org) (new ++ [head org]) -- Jump to next letter
-        else karpsravorloop (drop 3 org) (new ++ [head org]) -- Jump three letters forwards
+        karpsravorloop (tail org) ((head org):new) -- Jump to next letter
+        else karpsravorloop (drop 3 org) ((head org):new) -- Jump three letters forwards
 
 -- Medellängd
 medellangd:: String -> Float
