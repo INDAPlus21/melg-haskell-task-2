@@ -1,5 +1,5 @@
 module F1 where
-import Data.Char (isAlpha )
+import Data.Char (isAlpha)
 
 -- Fibbonnaci
 fibbottomup:: Integer -> Integer -> (Integer, Integer) -> Integer
@@ -18,37 +18,34 @@ fib n = fibbottomup n 2 (1, 1)
 -- Röverspråk
 vowels = ['a', 'e', 'o','u','i','y']
 
-rovarsprakconsonant:: Char -> String
-rovarsprakconsonant c = [c] ++ ['o'] ++ [c]
-
 rovarsprakchar:: Char -> String
-rovarsprakchar c = if c `elem` vowels then [c] else rovarsprakconsonant c
+rovarsprakchar c = if c `elem` vowels then [c] else [c, 'o', c]
 
 rovarsprak:: String -> String
-rovarsprak s = rovarsprakloop 0 s []
+rovarsprak s = rovarsprakloop s []
 
-rovarsprakloop:: Int -> String -> String -> String
-rovarsprakloop pos org new = if pos == (length org) then new
-    else rovarsprakloop (pos + 1) org (new ++ rovarsprakchar (org!!pos))
+rovarsprakloop:: String -> String -> String
+rovarsprakloop org new = if org == [] then new
+    else rovarsprakloop (tail org) (new ++ rovarsprakchar (head org))
 
 karpsravor:: String -> String
-karpsravor s = karpsravorloop 0 s []
+karpsravor s = karpsravorloop s []
 
-karpsravorloop:: Int -> String -> String -> String
-karpsravorloop pos org new = if pos >= (length org) then new
-    else if (org!!pos) `elem` vowels then 
-        karpsravorloop (pos + 1) org (new ++ [org!!pos]) -- Jump to next letter
-        else karpsravorloop (pos + 3) org (new ++ [org!!pos]) -- Jump three letters forwards
+karpsravorloop:: String -> String -> String
+karpsravorloop org new = if org == [] then new
+    else if (head org) `elem` vowels then 
+        karpsravorloop (tail org) (new ++ [head org]) -- Jump to next letter
+        else karpsravorloop (drop 3 org) (new ++ [head org]) -- Jump three letters forwards
 
 -- Medellängd
 medellangd:: String -> Float
-medellangd s = (fst (medellangdloop 0 s 0 1 0)) / (snd (medellangdloop 0 s 0 1 0))
+medellangd s = (fst (medellangdloop s 0 1 0)) / (snd (medellangdloop s 0 1 0))
 
-medellangdloop:: Int -> String -> Float -> Float -> Float -> (Float, Float)
-medellangdloop pos s chars words currentlen = if pos >= (length s) then 
+medellangdloop:: String -> Float -> Float -> Float -> (Float, Float)
+medellangdloop s chars words currentlen = if s == "" then 
     (chars + currentlen, if currentlen == 0 then words -1 else words) else -- Remove empty word at end
-    if isAlpha(s!!pos) then medellangdloop (pos + 1) s chars words (currentlen + 1) else -- Add to current length if letter
-    medellangdloop (pos + 1) s (chars + currentlen) (if currentlen == 0 then words else words + 1) 0 -- Add word if not letter
+    if isAlpha(head s) then medellangdloop (tail s) chars words (currentlen + 1) else -- Add to current length if letter
+    medellangdloop (tail s) (chars + currentlen) (if currentlen == 0 then words else words + 1) 0 -- Add word if not letter
 
 -- Skyffla
 skyffla:: [a] -> [a]
