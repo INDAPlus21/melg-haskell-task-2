@@ -5,9 +5,9 @@ import Data.Char (isAlpha )
 fibbottomup:: Integer -> Integer -> (Integer, Integer) -> Integer
 fibbottomup stop depth vals = 
     if depth == stop then
-        snd vals -- Reached stop
+        snd vals
     else
-        fibbottomup stop (depth + 1) (snd vals, fst vals + snd vals) -- Continue upwards
+        fibbottomup stop (depth + 1) (snd vals, fst vals + snd vals)
 
 fib :: Integer -> Integer
 fib 0 = 0
@@ -37,8 +37,8 @@ karpsravor s = karpsravorloop 0 s []
 karpsravorloop:: Int -> String -> String -> String
 karpsravorloop pos org new = if pos >= (length org) then new
     else if (org!!pos) `elem` vowels then 
-        karpsravorloop (pos + 1) org (new ++ [org!!pos])
-        else karpsravorloop (pos + 3) org (new ++ [org!!pos])
+        karpsravorloop (pos + 1) org (new ++ [org!!pos]) -- Jump to next letter
+        else karpsravorloop (pos + 3) org (new ++ [org!!pos]) -- Jump three letters forwards
 
 -- Medellängd
 medellangd:: String -> Float
@@ -50,4 +50,14 @@ medellangdloop pos s chars words currentlen = if pos >= (length s) then
     if isAlpha(s!!pos) then medellangdloop (pos + 1) s chars words (currentlen + 1) else -- Add to current length if letter
     medellangdloop (pos + 1) s (chars + currentlen) (if currentlen == 0 then words else words + 1) 0 -- Add word if not letter
 
-skyffla s = s
+-- Skyffla
+skyffla:: [a] -> [a]
+skyffla s = fst (skyfflarec [] s)
+
+skyfflarec:: [a] -> [a] -> ([a], [a])
+skyfflarec finished left =
+    if (length left) == 0 then
+        (finished, left)
+    else
+        skyfflarec (finished ++ [x | (x, i) <- zip left [0..], i `mod` 2 == 0]) -- Add elements with even indexes
+        ([x | (x, i) <- zip left [0..], i `mod` 2 == 1]) -- Continue with elements with odd indexes
