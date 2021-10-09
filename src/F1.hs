@@ -1,4 +1,5 @@
 module F1 where
+import Data.Char (isAlpha )
 
 -- Fibbonnaci
 fibbottomup:: Integer -> Integer -> (Integer, Integer) -> Integer
@@ -39,5 +40,14 @@ karpsravorloop pos org new = if pos >= (length org) then new
         karpsravorloop (pos + 1) org (new ++ [org!!pos])
         else karpsravorloop (pos + 3) org (new ++ [org!!pos])
 
-medellangd s = 1.0
+-- Medellängd
+medellangd:: String -> Float
+medellangd s = (fst (medellangdloop 0 s 0 1 0)) / (snd (medellangdloop 0 s 0 1 0))
+
+medellangdloop:: Int -> String -> Float -> Float -> Float -> (Float, Float)
+medellangdloop pos s chars words currentlen = if pos >= (length s) then 
+    (chars + currentlen, if currentlen == 0 then words -1 else words) else -- Remove empty word at end
+    if isAlpha(s!!pos) then medellangdloop (pos + 1) s chars words (currentlen + 1) else -- Add to current length if letter
+    medellangdloop (pos + 1) s (chars + currentlen) (if currentlen == 0 then words else words + 1) 0 -- Add word if not letter
+
 skyffla s = s
