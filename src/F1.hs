@@ -26,7 +26,7 @@ rovarsprak s = reverse(rovarsprakloop s [])
 
 rovarsprakloop:: String -> String -> String
 rovarsprakloop org new
-    | org == [] = new
+    | null org = new
     | (head org) `elem` vowels = rovarsprakloop (tail org) ((head org):new)
     | otherwise = rovarsprakloop (tail org) ((head org):'o':(head org):new)
 
@@ -35,7 +35,7 @@ karpsravor s = reverse(karpsravorloop s [])
 
 karpsravorloop:: String -> String -> String
 karpsravorloop org new 
-    | org == [] = new
+    | null org = new
     | (head org) `elem` vowels = karpsravorloop (tail org) ((head org):new) -- Jump to next letter
     | otherwise = karpsravorloop (drop 3 org) ((head org):new) -- Jump three letters forwards
 
@@ -45,7 +45,7 @@ medellangd s = (fst (medellangdloop s 0 1 0)) / (snd (medellangdloop s 0 1 0))
 
 medellangdloop:: String -> Float -> Float -> Float -> (Float, Float)
 medellangdloop s chars words currentlen
-    | s == "" = (chars + currentlen, if currentlen == 0 then words -1 else words) -- Remove empty word at end
+    | null s = (chars + currentlen, if currentlen == 0 then words -1 else words) -- Remove empty word at end
     | isAlpha(head s) = medellangdloop (tail s) chars words (currentlen + 1) -- Add to current length if letter
     | otherwise = medellangdloop (tail s) (chars + currentlen) (if currentlen == 0 then words else words + 1) 0 -- Add word if not letter
 
